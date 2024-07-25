@@ -34,7 +34,7 @@ def handle_family_members():
     response_body = {}
     members = jackson_family.get_all_members()
     if request.method == 'GET':
-       response_body = { "hello": "world",
+       response_body = { "family": "member",
                       "family": members}
     return response_body, 200
     if request.method == 'POST':
@@ -52,11 +52,20 @@ def handle_family_member(member_id):
         response_body['results'] = {}
         return response_body, 404
     if request.method == 'GET':
-        pass
+        member = jackson_family.get_member(member_id)
+        response_body['message'] = f'Data member {member_id}'
+        response_body['results'] = member[member_id]
+        return response_body, 200
     if request.method == 'PUT':
-        pass
+        member[member_id] = request.json
+        response_body['message'] = f'Member {member_id} modified'
+        response_body['results'] = member[member_id]
+        return response_body, 200
     if request.methos == 'DELETE':
-        pass
+        del member[member_id]
+        response_body['message'] = 'Deleted....'
+        response_body['results'] = member
+        return response_body, 200
 
 
 # This only runs if `$ python src/app.py` is executed
